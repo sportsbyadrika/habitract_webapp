@@ -1,73 +1,118 @@
 <?php
 
-namespace App\Models;
-
-use PDO;
-
 class Association
 {
-    public function __construct(private PDO $db)
+    private PDO $db;
+
+    public function __construct()
     {
+        $this->db = Database::getInstance();
     }
 
-    public function all(): array
+    /**
+     * Get all associations with optional status & search filters
+     */
+    public function all($status = null, $search = null): array
     {
-        $stmt = $this->db->query('SELECT * FROM associations ORDER BY name');
-        return $stmt->fetchAll();
+        $sql = "
+            SELECT 
+                a.*, 
+                d.name AS district_name
+            FROM associations a
+            LEFT JOIN districts d ON d.id = a.district_id
+            WHERE 1 = 1
+        ";
+
+        $params = [];
+
+        if ($status !== null && $status !== '') {
+            $sql .= " AND a.status = :status";
+            $params[':status'] = $status;
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND a.name LIKE :search";
+            $params[':search'] = '%' . $search . '%';
+        }
+
+        $sql .= " ORDER BY a.created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function count(): int
+    /**
+     * Create association
+     */
+    public function create(array $data): void
     {
-        $stmt = $this->db->query('SELECT COUNT(*) as total FROM associations');
-        $result = $stmt->fetch();
-        return (int) ($result['total'] ?? 0);
-    }
+        $sql = "
+            INSERT INTO associations
+                (name, association_code, district_id, location, service_start_date, service_end_date, status)
+            VALUES
+                (:name, :code, :district_id, :location, :start_date, :end_date, 1)
+        ";
 
-    public function countByStatus(bool $active): int
-    {
-        $stmt = $this->db->prepare('SELECT COUNT(*) as total FROM associations WHERE is_active = :is_active');
-        $stmt->bindValue(':is_active', $active, PDO::PARAM_BOOL);
-        $stmt->execute();
-        $result = $stmt->fetch();
-        return (int) ($result['total'] ?? 0);
-    }
-
-    public function findById(int $id): ?array
-    {
-        $stmt = $this->db->prepare('SELECT * FROM associations WHERE id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $association = $stmt->fetch();
-        return $association ?: null;
-    }
-
-    public function findByAdminUser(int $userId): ?array
-    {
-        $stmt = $this->db->prepare('SELECT * FROM associations WHERE admin_user_id = :user_id LIMIT 1');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-        $association = $stmt->fetch();
-        return $association ?: null;
-    }
-
-    public function create(array $data): int
-    {
-        $sql = 'INSERT INTO associations (name, local_body_id, location, district_id, association_code, reg_number, registered_with, valid_from, valid_to, service_end_date, admin_user_id, is_active) VALUES (:name, :local_body_id, :location, :district_id, :association_code, :reg_number, :registered_with, :valid_from, :valid_to, :service_end_date, :admin_user_id, :is_active)';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            ':name' => $data['name'],
-            ':local_body_id' => $data['local_body_id'],
-            ':location' => $data['location'],
+            ':name'        => $data['name'],
+            ':code'        => $data['association_code'],
             ':district_id' => $data['district_id'],
-            ':association_code' => $data['association_code'],
-            ':reg_number' => $data['reg_number'],
-            ':registered_with' => $data['registered_with'],
-            ':valid_from' => $data['valid_from'],
-            ':valid_to' => $data['valid_to'],
-            ':service_end_date' => $data['service_end_date'],
-            ':admin_user_id' => $data['admin_user_id'],
-            ':is_active' => $data['is_active'],
+            ':location'    => $data['location'] ?? null,
+            ':start_date'  => $data['service_start_date'],
+            ':end_date'    => $data['service_end_date'],
         ]);
-        return (int) $this->db->lastInsertId();
+    }
+
+    /**
+     * Find single association
+     */
+    public function find(int $id): array|false
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM associations WHERE id = :id"
+        );
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Update association
+     */
+    public function update(array $data): void
+    {
+        $sql = "
+            UPDATE associations SET
+                name = :name,
+                district_id = :district_id,
+                location = :location,
+                service_start_date = :start_date,
+                service_end_date = :end_date
+            WHERE id = :id
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':name'        => $data['name'],
+            ':district_id' => $data['district_id'],
+            ':location'    => $data['location'] ?? null,
+            ':start_date'  => $data['service_start_date'],
+            ':end_date'    => $data['service_end_date'],
+            ':id'          => $data['id'],
+        ]);
+    }
+
+    /**
+     * Deactivate association (soft delete)
+     */
+    public function deactivate(int $id): void
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE associations SET status = 0 WHERE id = :id"
+        );
+        $stmt->execute([':id' => $id]);
     }
 }

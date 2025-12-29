@@ -1,34 +1,24 @@
 <?php
 
-namespace App\Controllers;
+class SuperAdminController extends Controller {
+    
+    public function dashboard() {
+    Auth::requireRole('super_admin');
 
-use App\Core\Auth;
-use App\Core\Controller;
-use App\Models\Association;
-use App\Models\User;
+    $db = Database::getInstance();
 
-class SuperAdminController extends Controller
-{
-    public function __construct(private Auth $auth, private Association $associationModel, private User $userModel, private array $config)
-    {
-    }
+    $total = $db->query("SELECT COUNT(*) FROM associations")->fetchColumn();
 
-    public function dashboard(): void
-    {
-        $user = $this->auth->user();
-        if (!$user || $user['user_type'] !== 'super_admin') {
-            $this->redirect('/login');
-        }
+    $active = $db->query("
+        SELECT COUNT(*) FROM associations
+        WHERE service_end_date IS NULL 
+           OR service_end_date >= CURDATE()
+    ")->fetchColumn();
 
-        $data = [
-            'totalAssociations' => $this->associationModel->count(),
-            'activeAssociations' => $this->associationModel->countByStatus(true),
-            'inactiveAssociations' => $this->associationModel->countByStatus(false),
-            'totalAdmins' => $this->userModel->getAssociationAdminsCount(),
-            'config' => $this->config,
-            'user' => $user
-        ];
+    $inactive = $total - $active;
 
-        $this->view('dashboard/super_admin', $data);
-    }
+    $this->view('super_admin/dashboard', compact('total', 'active', 'inactive'));
 }
+
+    
+    }

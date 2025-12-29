@@ -1,7 +1,5 @@
 module.exports = {
-  content: ["./app/Views/**/*.php", "./public/**/*.php"],
-  theme: {
-    extend: {},
-  },
+  content: ["./app/Views/**/*.php"],
+  theme: { extend: {} },
   plugins: [],
-};
+}

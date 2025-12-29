@@ -1,38 +1,36 @@
 <?php
 
-namespace App\Core;
-
-use PDO;
-use PDOException;
-
 class Database
 {
-    private PDO $connection;
+    private static ?PDO $instance = null;
 
-    public function __construct(private array $config)
+    public static function getInstance(): PDO
     {
-        $this->connect();
-    }
+        if (!self::$instance) {
+            $config = require __DIR__ . '/../../config/config.php';
+            $db = $config['db'];
 
-    private function connect(): void
-    {
-        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $this->config['host'], $this->config['database'], $this->config['charset']);
-
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ];
-
-        try {
-            $this->connection = new PDO($dsn, $this->config['user'], $this->config['password'], $options);
-        } catch (PDOException $e) {
-            throw new PDOException('Database connection failed: ' . $e->getMessage());
+            self::$instance = new PDO(
+                "mysql:host={$db['host']};dbname={$db['name']};charset={$db['charset']}",
+                $db['user'],
+                $db['pass'],
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]
+            );
         }
+
+        return self::$instance;
     }
 
-    public function getConnection(): PDO
+    /**
+     * Prepared query helper (IMPORTANT)
+     */
+    public static function query(string $sql, array $params = []): PDOStatement
     {
-        return $this->connection;
+        $stmt = self::getInstance()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
     }
 }

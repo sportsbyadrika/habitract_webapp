@@ -1,18 +1,17 @@
 <?php
-
-namespace App\Core;
-
 class Controller
 {
-    protected function view(string $template, array $data = []): void
+    protected function view($view, $data = [])
     {
-        extract($data, EXTR_SKIP);
-        require __DIR__ . '/../Views/' . $template . '.php';
-    }
+        extract($data);
 
-    protected function redirect(string $path): void
-    {
-        header('Location: ' . $path);
-        exit;
+        // 🔹 ONLY NAVBAR (NO HEADER)
+        if (isset($_SESSION['user'])) {
+            require __DIR__ . '/../Views/layouts/navbar.php';
+        }
+
+        require __DIR__ . '/../Views/' . $view . '.php';
+
+        require __DIR__ . '/../Views/layouts/footer.php';
     }
 }
