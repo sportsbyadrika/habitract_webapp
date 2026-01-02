@@ -24,4 +24,12 @@ $router->post('/super-admin/associations/store', [SuperAdminAssociationControlle
 $router->get('/super-admin/associations/edit', [SuperAdminAssociationController::class, 'edit']);
 $router->post('/super-admin/associations/update', [SuperAdminAssociationController::class, 'update']);
 $router->post('/super-admin/associations/deactivate', [SuperAdminAssociationController::class, 'deactivate']);
+$router->post('/super-admin/associations/suspend',    [SuperAdminAssociationController::class, 'suspend']);
+$router->post('/super-admin/associations/activate',   [SuperAdminAssociationController::class, 'activate']);
+$router->get('/super-admin/districts/by-state', [SuperAdminAssociationController::class, 'districtsByState']);
+$router->get('/super-admin/association-admins', [SuperAdminAssociationAdminController::class, 'index']);
+$router->post('/super-admin/association-admins/store', [SuperAdminAssociationAdminController::class, 'store']);
+$router->post('/super-admin/association-admins/toggle',[SuperAdminAssociationAdminController::class, 'toggle']);
+$router->get('/super-admin/association-admins',[SuperAdminAssociationAdminController::class, 'index']);
+
 $router->dispatch();

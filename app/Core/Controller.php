@@ -5,8 +5,9 @@ class Controller
     {
         extract($data);
 
-        // 🔹 ONLY NAVBAR (NO HEADER)
-        if (isset($_SESSION['user'])) {
+        require __DIR__ . '/../Views/layouts/header.php';
+
+        if (isset($_SESSION['auth'])) {
             require __DIR__ . '/../Views/layouts/navbar.php';
         }
 

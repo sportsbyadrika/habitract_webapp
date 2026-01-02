@@ -27,24 +27,26 @@
                 class="w-full border rounded px-3 py-2"
             >
         </div>
-
+ <div>
+    <label class="block text-sm font-medium mb-1">State</label>
+    <select id="state_id" name="state_id" class="w-full border rounded px-3 py-2" required>
+        <option value="">-- Select State --</option>
+        <?php foreach ($states as $state): ?>
+            <option value="<?= $state['id'] ?>">
+                <?= htmlspecialchars($state['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
         <!-- District Dropdown -->
         <div>
             <label class="block font-medium">District</label>
-            <select
-                name="district_id"
-                required
-                class="w-full border rounded px-3 py-2"
-            >
-                <option value="">-- Select District --</option>
-
-                <?php foreach ($districts as $d): ?>
-                    <option value="<?= $d['id'] ?>">
-                        <?= htmlspecialchars($d['name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <select id="district_id" name="district_id" class="w-full border rounded px-3 py-2" required>
+    <option value="">-- Select District --</option>
+</select>
         </div>
+       
+
 
         <!-- Location -->
         <div>
@@ -95,7 +97,33 @@
         </div>
 
     </form>
+<script>
+document.getElementById('state_id').addEventListener('change', function () {
+    const stateId = this.value;
+    const districtSelect = document.getElementById('district_id');
 
+    //districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+
+   // if (!stateId) return;
+districtSelect.innerHTML = '<option value="">Loading...</option>';
+
+    if (!stateId) {
+        districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+        return;
+    }
+    fetch('/habitract_webapp/public/index.php/super-admin/districts/by-state?state_id=' + stateId)
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.id;
+                opt.textContent = d.name;
+                districtSelect.appendChild(opt);
+            });
+        })
+        .catch(err => console.error(err));
+});
+</script>
 </div>
 
 <?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

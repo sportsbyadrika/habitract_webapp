@@ -12,37 +12,41 @@ class Association
     /**
      * Get all associations with optional status & search filters
      */
-    public function all($status = null, $search = null): array
-    {
-        $sql = "
-            SELECT 
-                a.*, 
-                d.name AS district_name
-            FROM associations a
-            LEFT JOIN districts d ON d.id = a.district_id
-            WHERE 1 = 1
-        ";
+   public function all($status = null, $search = null): array
+{
+    $sql = "
+        SELECT
+            a.id,
+            a.name,
+            a.status,
+            a.created_at,
+            d.name AS district_name,
+            s.name AS state_name
+        FROM associations a
+        LEFT JOIN districts d ON d.id = a.district_id
+        LEFT JOIN states s ON s.id = d.state_id
+        WHERE 1 = 1
+    ";
 
-        $params = [];
+    $params = [];
 
-        if ($status !== null && $status !== '') {
-            $sql .= " AND a.status = :status";
-            $params[':status'] = $status;
-        }
-
-        if (!empty($search)) {
-            $sql .= " AND a.name LIKE :search";
-            $params[':search'] = '%' . $search . '%';
-        }
-
-        $sql .= " ORDER BY a.created_at DESC";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($status !== null && $status !== '') {
+        $sql .= " AND a.status = :status";
+        $params[':status'] = $status;
     }
 
+    if (!empty($search)) {
+        $sql .= " AND a.name LIKE :search";
+        $params[':search'] = '%' . $search . '%';
+    }
+
+    $sql .= " ORDER BY a.created_at DESC";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
     /**
      * Create association
      */
@@ -104,15 +108,42 @@ class Association
             ':id'          => $data['id'],
         ]);
     }
+// Deactivate association (PERMANENT)
+public function deactivate(int $id): void
+{
+    $stmt = $this->db->prepare(
+        "UPDATE associations SET status = 0 WHERE id = :id"
+    );
+    $stmt->execute(['id' => $id]);
+}
+ // Suspend association (TEMPORARY)
+public function suspend(int $id): void
+{
+    $stmt = $this->db->prepare(
+        "UPDATE associations SET status = 2 WHERE id = :id"
+    );
+    $stmt->execute(['id' => $id]);
+}
 
-    /**
-     * Deactivate association (soft delete)
-     */
-    public function deactivate(int $id): void
-    {
-        $stmt = $this->db->prepare(
-            "UPDATE associations SET status = 0 WHERE id = :id"
-        );
-        $stmt->execute([':id' => $id]);
-    }
+// Activate association
+public function activate(int $id): void
+{
+    $stmt = $this->db->prepare(
+        "UPDATE associations SET status = 1 WHERE id = :id"
+    );
+    $stmt->execute(['id' => $id]);
+}
+
+
+
+public function markExpired(): void
+{
+    $stmt = $this->db->prepare(
+        "UPDATE associations
+         SET status = 3
+         WHERE service_end_date < CURDATE()
+           AND status = 1"
+    );
+    $stmt->execute();
+}
 }
