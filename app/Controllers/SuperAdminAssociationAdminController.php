@@ -10,29 +10,42 @@ class SuperAdminAssociationAdminController extends Controller
         $this->admin = new AssociationAdmin();
     }
 
-    public function index()
-    {
-        $associationId = $_GET['association_id'] ?? null;
-
-        if (!$associationId || !is_numeric($associationId)) {
-            http_response_code(400);
-            exit('Invalid association');
-        }
-
-        $admins = $this->admin->getByAssociation((int)$associationId);
-
-        $this->view(
-            'super_admin/association_admin/index',
-            compact('admins', 'associationId')
-        );
+   public function index()
+{
+        if (!isset($_GET['association_id'])) {
+        die('Association ID missing');
     }
+
+    $associationId = (int) $_GET['association_id'];
+
+    $this->associationModel = new Association();
+    $this->associationAdminModel = new AssociationAdmin();
+
+    $association = $this->associationModel->find($associationId);
+
+    if (!$association) {
+        die('Association not found');
+    }
+
+    
+    $admins = $this->associationAdminModel->getByAssociation($associationId);
+
+      $this->view('super_admin/association_admin/index', [
+        'association' => $association,
+        'admins' => $admins
+    ]);
+}
 
     public function store()
 {
-    $this->admin->create($_POST);
+    if (!isset($_POST['association_id'])) {
+        die('Association ID missing');
+    }
 
-   // $_SESSION['success'] = 'Admin added successfully';
+    $this->associationAdminModel = new AssociationAdmin();
+    $this->associationAdminModel->create($_POST);
 
+    $_SESSION['success'] = 'Admin added successfully';
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit;
 }

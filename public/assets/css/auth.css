@@ -1,0 +1,120 @@
+/* Placeholder styling */
+input::placeholder {
+    color: #adb5bd;   
+    opacity: 1;       
+}
+
+input:focus::placeholder {
+    color: #ced4da;   
+}
+
+/* ---------- Layout ---------- */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3b5bff, #6f42c1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+/* ---------- Card ---------- */
+.auth-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+/* ---------- Headings ---------- */
+.auth-container h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    color: #212529;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 24px;
+}
+
+/* ---------- Form ---------- */
+.form-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: #ced4da;
+}
+
+input:focus {
+    outline: none;
+    border-color: #5c7cfa;
+    box-shadow: 0 0 0 3px rgba(92,124,250,0.15);
+}
+
+/* ---------- Button ---------- */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: #3b5bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #364fc7;
+}
+
+/* ---------- Messages ---------- */
+.message.error {
+    background: #fff5f5;
+    color: #c92a2a;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+/* ---------- Footer ---------- */
+.footer-links {
+    margin-top: 18px;
+}
+
+.footer-links a {
+    font-size: 13px;
+    color: #5c7cfa;
+    text-decoration: none;
+}
+
+.brand {
+    margin-top: 24px;
+    font-size: 12px;
+    color: #adb5bd;
+}

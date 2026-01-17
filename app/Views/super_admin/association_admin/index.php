@@ -5,8 +5,12 @@
         <?= $_SESSION['success']; unset($_SESSION['success']); ?>
     </div>
 <?php endif; ?>
-
-<h1 class="text-2xl font-semibold mb-6">Association Admins</h1>
+<h2 class="text-lg font-semibold mb-2">
+    Association:
+    <span class="text-blue-600">
+        <?= htmlspecialchars($association['name']) ?>
+    </span>
+</h2>
 
 <!-- Add Admin Card -->
 <div class="bg-white p-6 rounded shadow mb-8">
@@ -16,7 +20,7 @@
           action="/habitract_webapp/public/index.php/super-admin/association-admins/store"
           class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-        <input type="hidden" name="association_id" value="<?= $associationId ?>">
+       <input type="hidden" name="association_id" value="<?= $association['id'] ?>">
 
         <input type="text" name="name" placeholder="Name" required class="border p-2 rounded">
         <input type="email" name="email" placeholder="Email" required class="border p-2 rounded">

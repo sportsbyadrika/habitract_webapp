@@ -2,30 +2,24 @@
 
 class Auth
 {
-    /**
-     * Check if user is logged in (any role)
-     */
+   
     public static function check(): bool
     {
-        return isset($_SESSION['user']);
+        return isset($_SESSION['auth']);
     }
 
-    /**
-     * Get current role
-     */
+    
     public static function role(): ?string
     {
-        return $_SESSION['user']['role'] ?? null;
+        return $_SESSION['auth']['role'] ?? null;
     }
 
-    /**
-     * Require a specific role
-     */
+   
     public static function requireRole(string $role): void
     {
         if (
-            !isset($_SESSION['user']) ||
-            ($_SESSION['user']['role'] ?? null) !== $role
+            !isset($_SESSION['auth']) ||
+            ($_SESSION['auth']['role'] ?? null) !== $role
         ) {
             http_response_code(403);
             echo 'Unauthorized';
@@ -33,9 +27,7 @@ class Auth
         }
     }
 
-    /**
-     * Require login (any role)
-     */
+   
     public static function requireLogin(): void
     {
         if (!self::check()) {

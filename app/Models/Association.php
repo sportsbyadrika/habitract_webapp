@@ -47,6 +47,7 @@ class Association
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
     /**
      * Create association
      */
@@ -54,9 +55,9 @@ class Association
     {
         $sql = "
             INSERT INTO associations
-                (name, association_code, district_id, location, service_start_date, service_end_date, status)
+                (name, association_code, district_id, service_start_date, service_end_date, status)
             VALUES
-                (:name, :code, :district_id, :location, :start_date, :end_date, 1)
+                (:name, :code, :district_id, :start_date, :end_date, 1)
         ";
 
         $stmt = $this->db->prepare($sql);
@@ -64,8 +65,7 @@ class Association
             ':name'        => $data['name'],
             ':code'        => $data['association_code'],
             ':district_id' => $data['district_id'],
-            ':location'    => $data['location'] ?? null,
-            ':start_date'  => $data['service_start_date'],
+               ':start_date'  => $data['service_start_date'],
             ':end_date'    => $data['service_end_date'],
         ]);
     }
@@ -87,27 +87,30 @@ class Association
      * Update association
      */
     public function update(array $data): void
-    {
-        $sql = "
-            UPDATE associations SET
-                name = :name,
-                district_id = :district_id,
-                location = :location,
-                service_start_date = :start_date,
-                service_end_date = :end_date
-            WHERE id = :id
-        ";
+{
+    $sql = "
+        UPDATE associations SET
+            name = :name,
+            association_code = :code,
+            district_id = :district_id,
+            location = :location,
+            service_start_date = :start_date,
+            service_end_date = :end_date
+        WHERE id = :id
+    ";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':name'        => $data['name'],
-            ':district_id' => $data['district_id'],
-            ':location'    => $data['location'] ?? null,
-            ':start_date'  => $data['service_start_date'],
-            ':end_date'    => $data['service_end_date'],
-            ':id'          => $data['id'],
-        ]);
-    }
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute([
+        ':name'        => $data['name'],
+        ':code'        => $data['association_code'] ?? null,
+        ':district_id' => $data['district_id'],
+        ':location'    => $data['location'] ?? null,
+        ':start_date'  => $data['service_start_date'] ?? null,
+        ':end_date'    => $data['service_end_date'] ?? null,
+        ':id'          => $data['id'],
+    ]);
+}
 // Deactivate association (PERMANENT)
 public function deactivate(int $id): void
 {

@@ -19,44 +19,41 @@
             >
         </div>
         <!-- State -->
-        <div class="mb-4">
-            <label class="block mb-1">State</label>
-            <select name="state_id" id="state_id" class="w-full border rounded px-3 py-2">
-              <option value="">-- Select State --</option>
-              <?php foreach ($states as $state): ?>
-               <option value="<?= $state['id'] ?>"
-                  <?= ($state['id'] == $stateId) ? 'selected' : '' ?>>
-               <?= htmlspecialchars($state['name']) ?>
-             </option>
-             <?php endforeach; ?>
-           </select>
-        </div>
+        <select name="state_id" class="w-full border px-3 py-2 rounded">
+    <option value="">-- Select State --</option>
+    <?php foreach ($states as $state): ?>
+        <option value="<?= $state['id'] ?>"
+            <?= ($state['id'] == $stateId) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($state['name']) ?>
+        </option>
+    <?php endforeach; ?>
+</select>
 
 
         <!-- District -->
         <div class="mb-4">
-            <label class="block mb-1">District</label>
-           <select name="district_id" id="district_id" class="w-full border rounded px-3 py-2">
-             <option value="">-- Select District --</option>
-             <?php foreach ($districts as $d): ?>
-             <option value="<?= $d['id'] ?>"
-             <?= ($d['id'] == $districtId) ? 'selected' : '' ?>>
-             <?= htmlspecialchars($d['name']) ?>
-             </option>
-             <?php endforeach; ?>
-           </select>
+            <label>District</label>
+<select name="district_id" class="w-full border rounded px-3 py-2" required>
+    <option value="">-- Select District --</option>
+    <?php foreach ($districts as $district): ?>
+        <option value="<?= $district['id'] ?>"
+            <?= $district['id'] == $association['district_id'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($district['name']) ?>
+        </option>
+    <?php endforeach; ?>
+</select>
         </div>
 
         <!-- Location -->
-        <div class="mb-4">
-            <label class="block mb-1">Location</label>
-            <input
-                type="text"
-                name="location"
-                value="<?= htmlspecialchars($association['location']) ?>"
-                class="w-full border px-3 py-2 rounded"
-            >
-        </div>
+        <div>
+    <label class="block mb-1">Location</label>
+    <input
+        type="text"
+        name="location"
+        value="<?= isset($association['location']) ? htmlspecialchars($association['location']) : '' ?>"
+        class="w-full border px-3 py-2 rounded"
+    >
+</div>
 
         <div class="flex gap-3">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">

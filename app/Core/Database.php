@@ -24,9 +24,7 @@ class Database
         return self::$instance;
     }
 
-    /**
-     * Prepared query helper (IMPORTANT)
-     */
+   
     public static function query(string $sql, array $params = []): PDOStatement
     {
         $stmt = self::getInstance()->prepare($sql);

@@ -24,11 +24,16 @@ class SuperAdminAssociationController extends Controller
         $this->view('super_admin/associations/index', compact('associations'));
     }
 
-  public function create()
-{
-    $states = (new State())->getAll();
-    $this->view('super_admin/associations/create', compact('states'));
-}
+ public function create()
+    {
+        $states    = $this->state->getAll();
+        $districts = $this->district->getAll(); // 🔹 LOAD ALL DISTRICTS
+
+        $this->view(
+            'super_admin/associations/create',
+            compact('states', 'districts')
+        );
+    }
     public function store()
     {
         $this->association->create($_POST);
@@ -49,20 +54,23 @@ class SuperAdminAssociationController extends Controller
         exit;
     }
 
-    $district  = $this->district->find($association['district_id']);
+    // ✅ Get district
+    $district = $this->district->find($association['district_id']);
+
+    // ✅ Extract state_id from district
     $stateId = $district['state_id'];
+
+    // ✅ Load dropdown data
     $states    = $this->state->getAll();
-   $districts = $this->district->getByStateId($stateId);
+    $districts = $this->district->getByStateId($stateId);
 
     $this->view('super_admin/associations/edit', [
         'association' => $association,
         'states'      => $states,
         'districts'   => $districts,
-        'stateId'     => $stateId,
-        'districtId'  => $association['district_id']
+        'stateId'     => $stateId
     ]);
 }
-
     public function update()
     {
         $this->association->update($_POST);

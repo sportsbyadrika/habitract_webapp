@@ -9,7 +9,16 @@ class AssociationAdmin
         // Database::getInstance() already returns PDO
         $this->db = Database::getInstance();
     }
-
+public function findByEmail(string $email): array|false
+{
+    $stmt = $this->db->prepare(
+        "SELECT * FROM association_admins 
+         WHERE email = ? AND is_active = 1 
+         LIMIT 1"
+    );
+    $stmt->execute([$email]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
     public function getByAssociation(int $associationId): array
     {
         $stmt = $this->db->prepare(
