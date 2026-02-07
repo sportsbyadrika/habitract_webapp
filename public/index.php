@@ -47,6 +47,9 @@ $router->post('/forgot-set-password', [AuthController::class, 'forgotSetPassword
 
 
 // SUPER ADMIN
+$router->get('/super-admin/contact-messages', [SuperAdminController::class, 'contactMessages']);
+$router->get('/super-admin/reply-message',[ SuperAdminController::class, 'replyMessage']);
+$router->post('/super-admin/send-reply', [SuperAdminController::class, 'sendReply']);
 $router->get('/super-admin/dashboard', [SuperAdminController::class, 'dashboard']);
 // ASSOCIATIONS (Super Admin)
 $router->get('/super-admin/associations', [SuperAdminAssociationController::class, 'index']);
@@ -62,17 +65,26 @@ $router->get('/super-admin/association-admins', [SuperAdminAssociationAdminContr
 $router->post('/super-admin/association-admins/store', [SuperAdminAssociationAdminController::class, 'store']);
 $router->post('/super-admin/association-admins/toggle',[SuperAdminAssociationAdminController::class, 'toggle']);
 $router->get('/super-admin/association-admins',[SuperAdminAssociationAdminController::class, 'index']);
+$router->get('/plans', [PlansController::class, 'index']);
+$router->get('/contact', [PlansController::class, 'contact']);
+$router->post('/contact-submit', [PlansController::class, 'submitContact']);
+$router->get('/subscribe', [SubscriptionController::class, 'index']);
+$router->post('/subscribe', [SubscriptionController::class, 'process']);
+
 $router->get('/association/dashboard',[AssociationDashboardController::class, 'index']);
+
 $router->get('/association/members',[MembersController::class, 'index']);
 $router->get('/association/members/create',[MembersController::class, 'create']);
 $router->post('/association/members/store',[MembersController::class, 'store']);
 $router->get('/association/members/edit', [MembersController::class, 'edit']);
 $router->post('/association/members/update', [MembersController::class, 'update']);
-$router->post('/association/members/deactivate', [MembersController::class, 'deactivate']);
+$router->get('/association/members/activate', [MembersController::class, 'activate']);
+$router->get('/association/members/deactivate', [MembersController::class, 'deactivate']);
 $router->get('/association/settings/member-categories',[MemberCategoriesController::class, 'index']);
 $router->get('/association/settings/member-categories/create',[MemberCategoriesController::class, 'create']);
 $router->post('/association/settings/member-categories/store',[MemberCategoriesController::class, 'store']);
-$router->post('/association/settings/member-categories',[MemberCategoriesController::class, 'toggleAjax']);
+$router->get('/association/settings/member-categories/deactivate',[MemberCategoriesController::class, 'deactivate']);
+$router->get('/association/settings/member-categories/activate',[MemberCategoriesController::class, 'activate']);
 $router->get('/association/settings/fee-heads',[FeeHeadsController::class, 'index']);
 $router->get('/association/settings/fee-heads/create',[FeeHeadsController::class, 'create']);
 $router->post('/association/settings/fee-heads/store',[FeeHeadsController::class, 'store']);
@@ -85,6 +97,7 @@ $router->post('/association/settings/category-fee-heads/update',[CategoryFeeHead
 $router->get('/association/bills', [BillsController::class, 'index']);
 $router->get('/association/bills/generate', [BillsController::class, 'generate']);
 $router->post('/association/bills/generate', [BillsController::class, 'generate']);
-$router->get('/association/bills/view', [BillsController::class, 'show']);
+$router->get('/association/bills/show', [BillsController::class, 'show']);
+$router->post('/association/bills/send-whatsapp', [BillsController::class,'sendBillWhatsApp']);
 
 $router->dispatch();

@@ -30,18 +30,26 @@
                         <td class="border px-3 py-2"><?= ucfirst($cat->validity_type) ?></td>
                         <td class="border px-3 py-2"><?= ucfirst($cat->payment_periodicity) ?></td>
                         <td class="border px-3 py-2"><?= number_format($cat->amount, 2) ?></td>
+                        <td>
+    <?php if ($cat->is_active == 1): ?>
+    <span class="text-green-600 font-semibold">Active</span>
+<?php else: ?>
+    <span class="text-red-600 font-semibold">Inactive</span>
+<?php endif; ?>
+</td>
                         <td class="border px-3 py-2">
-                            <?= $cat->is_active ? 'Active' : 'Inactive' ?>
-                        </td>
-                        <td class="border px-3 py-2">
-                           <button
-                           type="button"
-                              class="text-blue-600 underline toggle-btn"
-                            data-id="<?= $cat->id ?>">
-                             Toggle
-                                </button>
-                            </a>
-                        </td>
+   <?php if ($cat->is_active == 1): ?>
+    <a href="<?= BASE_URL ?>/association/settings/member-categories/deactivate?id=<?= $cat->id ?>"
+       class="text-red-600">
+        Deactivate
+    </a>
+<?php else: ?>
+    <a href="<?= BASE_URL ?>/association/settings/member-categories/activate?id=<?= $cat->id ?>"
+       class="text-green-600">
+        Activate
+    </a>
+<?php endif; ?>
+</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -52,7 +60,7 @@
 <script>
 document.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.addEventListener('click', function (e) {
-        e.preventDefault(); // 🔴 VERY IMPORTANT
+        e.preventDefault(); 
 
         const id = this.dataset.id;
 

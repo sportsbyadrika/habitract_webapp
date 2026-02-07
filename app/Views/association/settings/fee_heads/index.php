@@ -57,7 +57,7 @@
                         </td>
 
                         <td class="px-6 py-4 text-center">
-                            <?php if ($feeHead['status'] === 'active'): ?>
+                            <?php if ($feeHead['status'] === 1): ?>
                                 <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">
                                     Active
                                 </span>

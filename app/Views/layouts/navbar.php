@@ -28,7 +28,15 @@
             View Association
         </a>
     </div>
-
+<a href="<?= BASE_URL ?>/super-admin/contact-messages"
+   style="margin-right:15px;">
+   Contact Messages
+   <?php if (!empty($newMessages) && $newMessages > 0): ?>
+       <span style="color:#e63946;font-weight:bold;">
+           (<?= $newMessages ?>)
+       </span>
+   <?php endif; ?>
+</a>
         <a href="/habitract_webapp/public/index.php/logout"
            class="bg-blue-800 px-3 py-1 rounded">
             Logout

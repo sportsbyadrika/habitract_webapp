@@ -31,25 +31,32 @@
                         <td class="p-3"><?= htmlspecialchars($m['owner_name']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($m['mobile_number']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($m['occupants']) ?></td>
-                        <td class="p-3 capitalize"><?= htmlspecialchars($m['status']) ?></td>
+                        <td class="p-3">
+    <?php if ($m['status'] == 1): ?>
+        <span class="text-green-600 font-semibold">Active</span>
+    <?php else: ?>
+        <span class="text-red-600 font-semibold">Inactive</span>
+    <?php endif; ?>
+</td>
+
 
                         <td class="p-3 space-x-3 text-blue-600">
-                            <a href="/habitract_webapp/public/index.php/association/members/edit?id=<?= $m['id'] ?>">
-                                Edit
-                            </a>
+    <a href="/habitract_webapp/public/index.php/association/members/edit?id=<?= $m['id'] ?>">
+        Edit
+    </a>
 
-                            <?php if ($m['status'] === 'active'): ?>
-                                <a href="/habitract_webapp/public/index.php/association/members/deactivate?id=<?= $m['id']?>"
-                                   class="text-red-600">
-                                    Deactivate
-                                </a>
-                            <?php else: ?>
-                                <a href="/habitract_webapp/public/index.php/association/members/activate?id=<?= $m['id'] ?>"
-                                   class="text-green-600">
-                                    Activate
-                                </a>
-                            <?php endif; ?>
-                        </td>
+    <?php if ($m['status'] == 1): ?>
+        <a href="/habitract_webapp/public/index.php/association/members/deactivate?id=<?= $m['id'] ?>"
+           class="text-red-600">
+            Deactivate
+        </a>
+    <?php else: ?>
+        <a href="/habitract_webapp/public/index.php/association/members/activate?id=<?= $m['id'] ?>"
+           class="text-green-600">
+            Activate
+        </a>
+    <?php endif; ?>
+</td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -61,5 +68,6 @@
             <?php endif; ?>
             </tbody>
         </table>
+       
     </div>
 </div>

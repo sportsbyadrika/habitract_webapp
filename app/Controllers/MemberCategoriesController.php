@@ -6,7 +6,7 @@ class MemberCategoriesController extends Controller
 
    public function __construct()
 {
-    $this->categoryModel = new MemberCategory();
+    $this->categoryModel = new MemberCategoryModel();
 }
 
     /**
@@ -63,14 +63,15 @@ class MemberCategoriesController extends Controller
     die('Required fields are missing');
 }
 
-        $this->categoryModel->create([
-            'association_id'      => $_SESSION['auth']['association_id'],
-            'name'                => trim($_POST['name']),
-            'validity_type'       => $_POST['validity_type'],
-            'payment_periodicity' => $_POST['payment_periodicity'],
-            'amount'              => $_POST['amount'],
-            'description'         => $_POST['description'] ?? null
-        ]);
+       $this->categoryModel->create([
+    'association_id'      => $_SESSION['auth']['association_id'],
+    'name'                => trim($_POST['name']),
+    'validity_type'       => $_POST['validity_type'],
+    'payment_periodicity' => $_POST['payment_periodicity'],
+    'amount'              => $_POST['amount'],
+    'description'         => $_POST['description'] ?? null,
+    'is_active'           => 1   
+]);
 
         header("Location: " . BASE_URL . "/association/settings/member-categories");
         exit;
@@ -79,27 +80,38 @@ class MemberCategoriesController extends Controller
     /**
      * Activate / Deactivate category
      */
-   public function toggleAjax()
+  public function deactivate()
 {
     if (!isset($_SESSION['auth'])) {
-        http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        header("Location: " . BASE_URL . "/login");
         exit;
     }
 
-    if (!isset($_POST['id'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Missing ID']);
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        die('Category ID missing');
+    }
+
+    $this->categoryModel->setActiveStatus($id, 0);
+
+    header("Location: " . BASE_URL . "/association/settings/member-categories");
+    exit;
+}
+public function activate()
+{
+    if (!isset($_SESSION['auth'])) {
+        header("Location: " . BASE_URL . "/login");
         exit;
     }
 
-    $id = (int) $_POST['id'];
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        die('Category ID missing');
+    }
 
-    $this->categoryModel->toggleStatus($id);
+    $this->categoryModel->setActiveStatus($id, 1);
 
-    echo json_encode([
-        'success' => true
-    ]);
+    header("Location: " . BASE_URL . "/association/settings/member-categories");
     exit;
 }
 }

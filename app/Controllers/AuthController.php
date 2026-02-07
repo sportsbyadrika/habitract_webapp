@@ -11,54 +11,60 @@ class AuthController extends Controller
         require __DIR__ . '/../Views/auth/login.php';
     }
 
-    public function login()
-    {
-       $identity = trim($_POST['identity'] ?? '');
-$password = $_POST['password'] ?? '';
+  public function login()
+{
+    session_start();
 
-$pdo = Database::getInstance();
+    $identity = trim($_POST['identity'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-/* ---------- SUPER ADMIN ---------- */
-$stmt = $pdo->prepare(
-    "SELECT * FROM users WHERE username = ?"
-);
-$stmt->execute([$identity]);
-$user = $stmt->fetch();
-
-if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['auth'] = [
-        'id' => $user['id'],
-        'role' => 'super_admin'
-    ];
-
-    header("Location: /habitract_webapp/public/index.php/super-admin/dashboard");
-    exit;
-}
-
-/* ---------- ASSOCIATION ADMIN ---------- */
-$stmt = $pdo->prepare(
-    "SELECT * FROM association_admins 
-     WHERE email = ? AND is_active = 1"
-);
-$stmt->execute([$identity]);
-$admin = $stmt->fetch();
-
-if ($admin && password_verify($password, $admin['password'])) {
-    $_SESSION['auth'] = [
-        'id' => $admin['id'],
-        'association_id' => $admin['association_id'],
-        'role' => 'association_admin'
-    ];
-
-    header("Location: /habitract_webapp/public/index.php/association/dashboard");
-    exit;
-}
-
-header("Location: /habitract_webapp/public/index.php/login?error=1");
-exit;
-
+    if ($identity === '' || $password === '') {
+        header("Location: /habitract_webapp/public/index.php/login?error=1");
+        exit;
     }
 
+    $pdo = Database::getInstance();
+
+    /* ================= SUPER ADMIN ================= */
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->execute([$identity]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['auth'] = [
+            'id'   => $user['id'],
+            'role' => 'super_admin'
+        ];
+
+        header("Location: /habitract_webapp/public/index.php/super-admin/dashboard");
+        exit;
+    }
+
+    /* ============ ASSOCIATION ADMIN ============ */
+    $stmt = $pdo->prepare("
+        SELECT * FROM association_admins
+        WHERE email = ? AND is_active = 1
+    ");
+    $stmt->execute([$identity]);
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($admin && password_verify($password, $admin['password'])) {
+        $_SESSION['auth'] = [
+            'id'             => $admin['id'],
+            'association_id' => $admin['association_id'],
+            'role'           => 'association_admin'
+        ];
+
+        // ALWAYS go to dashboard
+       
+    header("Location: " . BASE_URL . "/association/dashboard");
+    exit;
+    }
+
+    // ❌ Login failed
+    header("Location: /habitract_webapp/public/index.php/login?error=1");
+    exit;
+}
     /* ==========================
        REGISTER ASSOCIATION
     ========================== */
@@ -136,13 +142,11 @@ public function verifyOtp()
         exit;
     }
 
-    // ✅ OTP VERIFIED — SET FLAGS
+    
     $_SESSION['otp_verified']   = true;
     $_SESSION['password_email'] = $_SESSION['registration']['email'];
 
-    // ❌ DO NOT UNSET registration HERE
-
-    // ✅ REDIRECT TO SET PASSWORD (NOT LOGIN)
+    
     header("Location: /habitract_webapp/public/index.php/set-password");
     exit;
 }
@@ -233,7 +237,7 @@ public function setPassword()
         $_SESSION['otp_verified']
     );
 
-    // ✅ Redirect to SAME PAGE to show success
+    
     header("Location: /habitract_webapp/public/index.php/set-password?success=1");
     exit;
 }
@@ -383,8 +387,7 @@ public function forgotSetPassword()
     );
     $stmt->execute([$hash, $_SESSION['forgot_email']]);
 
-    // Cleanup
-    unset(
+        unset(
         $_SESSION['forgot_email'],
         $_SESSION['forgot_otp'],
         $_SESSION['forgot_otp_expires'],
@@ -399,10 +402,10 @@ public function logout()
 {
     session_start();
 
-    // Unset all auth data
+    
     unset($_SESSION['auth']);
 
-    // Optional: destroy session completely
+   
     session_destroy();
 
     header("Location: /habitract_webapp/public/index.php/login");

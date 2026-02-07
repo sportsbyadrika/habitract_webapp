@@ -32,22 +32,28 @@ class MemberModel
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    /* =====================================
-     * Create new member
-     * Used in MembersController@store
-     * ===================================== */
-  public function getMembersByCategory(
-    int $associationId,
-    int $categoryId
-): array {
-    $sql = "
-        SELECT *
+    public function getCategoriesByAssociation($associationId)
+{
+    $stmt = $this->db->prepare("
+        SELECT id, name
+        FROM member_categories
+        WHERE association_id = ?
+          AND is_active = 1
+    ");
+    $stmt->execute([$associationId]);
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+ public function getMembersByCategory($associationId, $categoryId)
+{
+    $stmt = $this->db->prepare("
+        SELECT 
+            id,
+            owner_name AS name
         FROM members
         WHERE association_id = ?
-        AND member_category_id = ?
-    ";
-
-    $stmt = Database::query($sql, [$associationId, $categoryId]);
+          AND member_category_id = ?
+    ");
+    $stmt->execute([$associationId, $categoryId]);
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
     public function create(array $data): bool
@@ -113,7 +119,22 @@ class MemberModel
 
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
+public function getMemberById(int $id)
+{
+    $sql = "
+        SELECT *
+        FROM members
+        WHERE id = :id
+        LIMIT 1
+    ";
 
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        'id' => $id
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
     /* =====================================
      * Update member (future)
      * ===================================== */
@@ -163,4 +184,44 @@ class MemberModel
 
         return (int) $stmt->fetch(PDO::FETCH_OBJ)->total;
     }
+    public function isMembershipDue(object $member, int $billMonth, int $billYear): bool
+{
+    if (empty($member->membership_start_date)) {
+        // Safety fallback – treat as first-time
+        return true;
+    }
+
+    $startDate = new DateTime($member->membership_start_date);
+    $billDate  = new DateTime($billYear . '-' . str_pad($billMonth, 2, '0', STR_PAD_LEFT) . '-01');
+
+    // Next renewal date = start date + 1 year
+    $nextRenewal = (clone $startDate)->modify('+1 year');
+
+    return $billDate >= $nextRenewal;
+}
+
+public function renewMembership(int $memberId, int $billMonth, int $billYear): void
+{
+    $renewalDate = $billYear . '-' . str_pad($billMonth, 2, '0', STR_PAD_LEFT) . '-01';
+
+    $sql = "
+        UPDATE members
+        SET membership_start_date = :renewal_date
+        WHERE id = :member_id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        'renewal_date' => $renewalDate,
+        'member_id'    => $memberId
+    ]);
+}
+public function find(int $id)
+{
+    $stmt = $this->db->prepare(
+        "SELECT * FROM members WHERE id = :id LIMIT 1"
+    );
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
 }

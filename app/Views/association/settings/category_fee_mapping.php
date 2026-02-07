@@ -3,12 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/**
- * Expected variables from controller:
- * $categories  -> array of member categories
- * $fee_heads   -> array of fee heads
- * $mapped      -> array [category_id => [fee_head_id, fee_head_id]]
- */
+
+
 $mapped = $mapped ?? [];
 $fee_heads = $fee_heads ?? [];
 $categories = $categories ?? [];
@@ -24,16 +20,18 @@ $categories = $categories ?? [];
 
         <!-- Flash Messages -->
         <?php if (!empty($_SESSION['flash_success'])): ?>
-            <div class="mx-6 mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                <?= $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?>
-            </div>
-        <?php endif; ?>
+    <div id="flashSuccess"
+         class="mx-6 mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+        <?= $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?>
+    </div>
+<?php endif; ?>
 
         <?php if (!empty($_SESSION['flash_error'])): ?>
-            <div class="mx-6 mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                <?= $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
-            </div>
-        <?php endif; ?>
+    <div id="flashError"
+         class="mx-6 mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <?= $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
+    </div>
+<?php endif; ?>
 
         <!-- Form -->
         <form method="POST"

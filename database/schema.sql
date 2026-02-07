@@ -207,3 +207,59 @@ CREATE TABLE bill_items (
         REFERENCES bills(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE `password_resets` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `token` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `expires_at` DATETIME NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;
+
+  CREATE TABLE `subscriptions` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `association_id` INT(10) UNSIGNED NOT NULL,
+  `plan_id` INT(10) UNSIGNED NOT NULL,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('trial','active','expired','cancelled')
+           COLLATE utf8mb4_general_ci
+           DEFAULT 'trial',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_association_id` (`association_id`),
+  KEY `idx_plan_id` (`plan_id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;
+
+  CREATE TABLE `subscription_plans` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  `duration_days` INT(11) NOT NULL,
+  `description` TEXT COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_active` TINYINT(1) DEFAULT 1,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;
+
+  CREATE TABLE `contact_messages` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` VARCHAR(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `message` TEXT COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` ENUM('new','read')
+           COLLATE utf8mb4_general_ci
+           DEFAULT 'new',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;

@@ -7,7 +7,7 @@ class Database
     public static function getInstance(): PDO
     {
         if (!self::$instance) {
-            $config = require __DIR__ . '/../../config/config.php';
+          $config = require __DIR__ . '/../../config/config.php';
             $db = $config['db'];
 
             self::$instance = new PDO(

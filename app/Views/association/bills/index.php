@@ -1,89 +1,243 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Monthly Bills</title>
+<?php
+/** @var array $bills */
+?>
 
-    <!-- Tailwind (since your navbar uses it) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<style>
+body {
+    background-color: #f4f6f9;
+}
 
-    <style>
-        body {
-            background-color: #f5f6f8;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
+/* Page header */
+.page-header h2 {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
 
-<!-- ✅ ASSOCIATION ADMIN NAVBAR -->
-<?php include __DIR__ . '/../../layouts/navbar_association_admin.php'; ?>
+.page-header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
 
-<!-- PAGE CONTENT -->
-<div class="max-w-5xl mx-auto px-4 py-4">
+/* Card container */
+.bills-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.05);
+    padding: 28px;
+}
 
-    <!-- HEADER -->
-    <div class="mb-3">
-        <h1 class="text-lg font-semibold text-gray-800">
-            Monthly Bills
-        </h1>
+/* Table spacing */
+.bills-table {
+    border-collapse: separate;
+    border-spacing: 0 18px;
+}
+
+/* Header */
+.bills-table thead th {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    border: none;
+    padding: 12px 18px;
+    vertical-align: middle;
+}
+
+/* Rows */
+.bills-table tbody tr {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+/* Cells */
+.bills-table tbody td {
+    padding: 18px 20px;
+    border: none;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+/* Alignment helpers */
+.text-start { text-align: left; }
+.text-end { text-align: right; white-space: nowrap; }
+.text-center { text-align: center; }
+
+/* Pills */
+.category-pill {
+    background: #eef2ff;
+    color: #3730a3;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.status-generated {
+    background: #eef2ff;
+    color: #3730a3;
+}
+
+.status-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-partial {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Amounts */
+.amount-danger {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+/* Action button */
+.bills-table .btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+}
+
+/* Hover polish */
+.bills-table tbody tr:hover {
+    transform: translateY(-2px);
+    transition: 0.2s ease;
+}
+</style>
+
+<div class="container-fluid px-4 mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header">
+        <div>
+            <h2>Bills</h2>
+            <p>Monthly bills generated for members</p>
+        </div>
+
+        <a href="<?= BASE_URL ?>/association/bills/generate"
+           class="btn btn-primary px-4 py-2 rounded-pill">
+            + Generate Bills
+        </a>
     </div>
 
-    <!-- TABLE CARD -->
-    <div class="bg-white rounded-md shadow-sm overflow-hidden">
-
-        <table class="w-full border-collapse">
-            <thead class="bg-gray-100 text-gray-700 text-sm">
+    <!-- Bills Table -->
+    <div class="bills-card">
+        <table class="table bills-table">
+            <thead>
                 <tr>
-                    <th class="px-3 py-2 text-left">Member</th>
-                    <th class="px-3 py-2 text-left">House</th>
-                    <th class="px-3 py-2 text-left">Month</th>
-                    <th class="px-3 py-2 text-center">Total (₹)</th>
-                    <th class="px-3 py-2 text-center">Status</th>
-                    <th class="px-3 py-2 text-center">Action</th>
+                    <th class="text-start">#</th>
+                    <th class="text-start">Member</th>
+                    <th class="text-start">Category</th>
+                    <th class="text-start">Billing Month</th>
+                    <th class="text-end">Total</th>
+                    <th class="text-end">Outstanding</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-end">Action</th>
                 </tr>
             </thead>
 
-            <tbody class="text-sm text-gray-800">
+            <tbody>
             <?php if (empty($bills)): ?>
                 <tr>
-                    <td colspan="6" class="px-3 py-4 text-center text-gray-500">
-                        No bills found
+                    <td colspan="8" class="text-center text-muted py-5">
+                        No bills generated yet
                     </td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($bills as $bill): ?>
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-3 py-2">
-                            <?= htmlspecialchars($bill['owner_name']) ?>
-                        </td>
-                        <td class="px-3 py-2">
-                            <?= htmlspecialchars($bill['house_number']) ?>
-                        </td>
-                        <td class="px-3 py-2">
-                            <?= $bill['bill_month'] ?>/<?= $bill['bill_year'] ?>
-                        </td>
-                        <td class="px-3 py-2 text-center font-medium">
-    ₹<?= number_format($bill['total_amount'], 2) ?>
-</td>
+                    <tr>
+                        <td class="text-start"><?= $bill->id ?></td>
 
-<td class="px-3 py-2 text-center">
-    <span class="inline-block rounded-full bg-gray-200 text-gray-800 text-xs px-2 py-0.5">
-        <?= ucfirst($bill['status']) ?>
+                        <td class="text-start">
+                            <strong><?= htmlspecialchars($bill->member_name) ?></strong>
+                        </td>
+
+                        <td class="text-middle">
+                            <span class="category-pill">
+                                <?= htmlspecialchars($bill->category_name) ?>
+                            </span>
+                        </td>
+
+                        <td class="text-start">
+                            <?= date('M Y', strtotime($bill->bill_year . '-' . $bill->bill_month . '-01')) ?>
+                        </td>
+
+                        <td class="text-end">
+                            ₹<?= number_format($bill->total_amount, 2) ?>
+                        </td>
+
+                        <td class="text-end amount-danger">
+                            ₹<?= number_format($bill->outstanding_amount, 2) ?>
+                        </td>
+<td>
+    <?php
+        $status = (!empty($bill->status)) ? $bill->status : 'generated';
+    ?>
+    <span class="status-pill status-<?= $status ?>">
+        <?= ucfirst($status) ?>
     </span>
 </td>
-                        <td class="px-3 py-2 text-center">
-                           <a href="<?= BASE_URL ?>/association/bills/view?id=<?= $bill['id'] ?>">View</a>
-                               
-                        </td>
+<td class="text-end">
+    <a href="<?= BASE_URL ?>/association/bills/show?id=<?= $bill->id ?>">
+        View
+    </a>
+
+    &nbsp;|&nbsp;
+
+    <a href="javascript:void(0);"
+       onclick="sendBillWhatsApp(<?= $bill->id ?>)">
+        📲 Send WhatsApp
+    </a>
+</td>
+                        
+                        
+
+  
+                
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
             </tbody>
         </table>
+        
+       
 
     </div>
 </div>
+<script>
+function sendBillWhatsApp(billId) {
+    if (!confirm("Send WhatsApp bill notification?")) return;
 
-</body>
-</html>
+    fetch('/habitract_webapp/public/association/bills/send-whatsapp', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bill_id: billId })
+    })
+    .then(res => res.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            alert(data.message ?? "WhatsApp sent");
+            console.log(data);
+        } catch (e) {
+            console.error(text);
+            alert("Server error");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("WhatsApp failed");
+    });
+}
+</script>

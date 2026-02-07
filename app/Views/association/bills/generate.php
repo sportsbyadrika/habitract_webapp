@@ -1,10 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
+/*if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}
+}*/
 
-require __DIR__ . '/../../layouts/header.php';
-require __DIR__ . '/../../layouts/navbar_association_admin.php';
+//require __DIR__ . '/../../layouts/header.php';
+//require __DIR__ . '/../../layouts/navbar_association_admin.php';
 ?>
 
 <style>
@@ -135,11 +135,21 @@ require __DIR__ . '/../../layouts/navbar_association_admin.php';
                 <div class="hint">Bills will be generated for all members under this category</div>
             </div>
 
-            <div class="form-group">
-                <label>Billing Month</label>
-                <input type="month" name="bill_month" class="form-control" required>
-                <div class="hint">Choose the month for which bills should be generated</div>
-            </div>
+          <div class="form-group">
+    <label for="bill_month">Billing Month</label>
+
+    <input
+        type="month"
+        id="bill_month"
+        name="bill_month"
+        class="form-control"
+        required
+    >
+
+    <small class="text-muted">
+        Choose the month for which bills should be generated
+    </small>
+</div>
 
             <button type="submit" class="btn-primary">
                 Generate Bills
