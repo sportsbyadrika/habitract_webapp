@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center">
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-400 to-slate-600 flex items-center justify-center">
 
 <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
 
@@ -44,7 +44,7 @@
 
     <button
         type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg mt-4"
+        class="w-full  bg-gradient-to-r from-blue-600 to-slate-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg mt-4"
     >
         Verify OTP
     </button>

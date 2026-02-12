@@ -1,4 +1,4 @@
-<nav class="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
+<nav class="bg-gradient-to-br from-slate-600 via-blue-500 to-slate-600 text-white px-6 py-3 flex justify-between items-center">
 
     <!-- LEFT -->
     <div class="flex items-center space-x-4">
@@ -68,7 +68,7 @@
     <!-- RIGHT -->
     <div>
         <a href="<?= BASE_URL ?>/logout"
-   class="bg-red-500 px-4 py-1 rounded hover:bg-red-600">
+   class=" bg-gradient-to-r from-blue-600 to-slate-600 px-3 py-1 rounded">
    Logout
 </a>
     </div>

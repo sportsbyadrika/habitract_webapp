@@ -10,11 +10,11 @@ $fee_heads = $fee_heads ?? [];
 $categories = $categories ?? [];
 ?>
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="min-h-screen bg-white py-10">
     <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md">
 
         <!-- Header -->
-        <div class="bg-blue-600 rounded-t-xl px-6 py-4">
+        <div class="bg-gradient-to-br from-slate-600 via-blue-500 to-slate-600 rounded-t-xl px-6 py-4">
             <h2 class="text-white text-lg font-semibold">Category Fee Mapping</h2>
         </div>
 
@@ -93,7 +93,7 @@ $categories = $categories ?? [];
             <!-- Submit -->
             <div class="flex justify-end">
                 <button type="submit"
-                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md text-sm font-medium">
+                        class="bg-gradient-to-r from-blue-600 to-slate-600  hover:bg-green-700 text-white px-6 py-2 rounded-md text-sm font-medium">
                     Save Mapping
                 </button>
             </div>

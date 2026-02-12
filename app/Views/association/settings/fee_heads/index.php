@@ -9,7 +9,7 @@
         </h1>
 
         <a href="/habitract_webapp/public/association/settings/fee-heads/create"
-           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-slate-600 rounded-md hover:bg-blue-700">
             + Add Fee Head
         </a>
     </div>

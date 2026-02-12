@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<nav class="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
+<nav class=" bg-gradient-to-br from-slate-600 via-blue-500 to-slate-600 text-white px-6 py-3 flex justify-between items-center">
     <div class="font-bold text-lg">
         Association SAAS
     </div>
@@ -38,7 +38,7 @@
    <?php endif; ?>
 </a>
         <a href="/habitract_webapp/public/index.php/logout"
-           class="bg-blue-800 px-3 py-1 rounded">
+           class=" bg-gradient-to-r from-blue-600 to-slate-600 px-3 py-1 rounded">
             Logout
         </a>
     </div>

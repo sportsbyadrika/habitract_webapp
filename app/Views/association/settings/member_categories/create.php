@@ -69,7 +69,7 @@
             </a>
 
             <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded">
+                    class="px-4 py-2 bg-gradient-to-r from-blue-600 to-slate-600 text-white rounded">
                 Save Category
             </button>
         </div>

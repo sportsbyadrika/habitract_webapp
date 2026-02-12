@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 relative overflow-hidden">
+<body class="min-h-screen bg-gradient-to-br from-slate-600 via-blue-500 to-slate-700 relative overflow-hidden">
 
 <!-- HERO ILLUSTRATION -->
 <div
@@ -52,14 +52,14 @@
             <div class="relative border-2 border-blue-600 rounded-2xl p-5 mb-8 bg-white
                         transition hover:-translate-y-2 hover:shadow-2xl">
 
-                <span class="absolute -top-4 right-6 bg-gradient-to-r from-blue-600 to-indigo-600
+                <span class="absolute -top-4 right-6 bg-gradient-to-r from-blue-500 to-slate-600
                              text-white text-xs px-4 py-1 rounded-full shadow-lg">
                     ⭐ Most Popular
                 </span>
 
                 <h3 class="text-xl font-semibold text-gray-800">Basic Association Plan</h3>
 
-                <p class="text-4xl font-bold text-blue-600 mt-2">
+                <p class="text-4xl font-bold text-blue-500 mt-2">
                     ₹2500 <span class="text-sm text-gray-500">/ year</span>
                 </p>
 
@@ -148,7 +148,7 @@
                         <p id="errorMsg" class="text-red-600 text-sm hidden">Invalid username or password</p>
                         <button
                             type="submit"
-                            class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600
+                            class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-slate-600
                                    text-white rounded-xl font-semibold hover:opacity-90 transition">
                             Login
                         </button>

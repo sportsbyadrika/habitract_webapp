@@ -151,7 +151,7 @@
     </small>
 </div>
 
-            <button type="submit" class="btn-primary">
+            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-slate-600 text-white rounded">
                 Generate Bills
             </button>
 

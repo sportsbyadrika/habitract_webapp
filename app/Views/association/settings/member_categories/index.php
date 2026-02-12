@@ -4,7 +4,7 @@
         <h2 class="text-xl font-semibold">Member Categories</h2>
 
         <a href="<?= BASE_URL ?>/association/settings/member-categories/create"
-           class="px-4 py-2 bg-blue-600 text-white rounded">
+           class="px-4 py-2 bg-gradient-to-r from-blue-600 to-slate-600 text-white rounded">
             + Add Category
         </a>
     </div>

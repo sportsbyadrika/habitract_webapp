@@ -83,8 +83,8 @@ body {
 }
 
 .status-generated {
-    background: #eef2ff;
-    color: #3730a3;
+    background: #8b96b9;
+    color: #3f3b7e;
 }
 
 .status-paid {
@@ -120,13 +120,12 @@ body {
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 page-header">
-        <div>
-            <h2>Bills</h2>
-            <p>Monthly bills generated for members</p>
-        </div>
+        
+            <h2>Monthly bills generated for members</h2>
+               
 
         <a href="<?= BASE_URL ?>/association/bills/generate"
-           class="btn btn-primary px-4 py-2 rounded-pill">
+            class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-slate-600 text-white font-medium hover:bg-blue-700">
             + Generate Bills
         </a>
     </div>

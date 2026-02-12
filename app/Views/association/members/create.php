@@ -74,7 +74,7 @@
                class="px-4 py-2 border rounded">Cancel</a>
 
             <button type="submit"
-                    class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                    class="bg-gradient-to-r from-blue-600 to-slate-600  text-white px-6 py-2 rounded hover:bg-blue-700">
                 Save Member
             </button>
         </div>

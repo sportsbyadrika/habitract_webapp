@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-semibold text-gray-800">Members</h1>
 
         <a href="<?= BASE_URL ?>/association/members/create"
-           class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow">
+           class="inline-flex items-center bg-gradient-to-r from-blue-600 to-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow">
             + Add Member
         </a>
     </div>
